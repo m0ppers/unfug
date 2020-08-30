@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+      }
+
+      body.black {
+        color: white;
+        background-color: black;
+      }
+
+      h1 {
+        font-size: 1em;
+        font-family: "Comic Sans MS", "Chalkboard SE", "Comic Neue", sans-serif;
+      }
+
+      .container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-align: center;
+      }
+
+      .geil {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        object-fit: contain;
+        display: flex;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="boring">
+        <h1>UNFUG.JETZT</h1>
+        <h2><button onclick="start()">Click</button></h2>
+        <audio src="laugh.mp3" loop></audio>
+      </div>
+      <div class="geil" style="display: none">
+        <svg viewBox="0 0 100 100" style="width: 100%; height: 100%">
+          <text
+            x="50"
+            y="0"
+            style="dominant-baseline: hanging; font-size: 100px"
+            text-anchor="middle"
+          >
+            🤡
+          </text>
+        </svg>
+      </div>
+    </div>
+    <script type="text/javascript">
+      let i = 0;
+      const body = document.querySelector("body");
+      const h2 = document.querySelector("h2");
+      const clown = document.querySelector("div.geil");
+      const emojis = [
+        "🥰",
+        "🥺",
+        "😂",
+        "🤩",
+        "😷",
+        "🤯",
+        "🤓",
+        "😱",
+        "😳",
+        "🥴",
+      ];
+
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      let audioContext;
+      // get the audio element
+      const audioElement = document.querySelector("audio");
+
+      let clowned = false;
+      let startTime;
+      const start = () => {
+        audioContext = new AudioContext();
+        startTime = Date.now();
+        update();
+      };
+
+      const update = () => {
+        const current = Date.now();
+        const elapsed = current - startTime;
+        let currentIndex;
+
+        const worktime = elapsed % 20000;
+        if (worktime < 10000) {
+          if (clowned) {
+            clowned = false;
+            audioElement.pause();
+            clown.style.display = "none";
+          }
+          let index = Math.floor(worktime / 1000);
+          if (currentIndex !== index) {
+            h2.textContent = emojis[index];
+          }
+        } else {
+          if (!clowned) {
+            clowned = true;
+            clown.style.display = "flex";
+            audioElement.play();
+          }
+          if (i % 2 == 0) {
+            body.setAttribute("class", "");
+          } else {
+            body.setAttribute("class", "black");
+          }
+          i++;
+        }
+
+        requestAnimationFrame(update);
+      };
+    </script>
+  </body>
+</html>
